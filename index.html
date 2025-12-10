@@ -1,83 +1,52 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inventário App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory App</title>
+  <link rel="stylesheet" href="style.css">
 
-    <link rel="stylesheet" href="style.css" />
-
-    <!-- Google OAuth -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
-    <!-- LOGIN SECTION -->
-    <div id="loginSection" class="centered">
-        <h2>Inventário App</h2>
-        <button id="loginBtn" onclick="googleLogin()">Login com Google</button>
-    </div>
+  <div id="app">
+      <h1>Inventory App</h1>
 
-    <!-- APP SECTION -->
-    <div id="appSection" style="display:none">
-
-        <h2>📍 Nova Sala</h2>
-        <div class="card">
-            <label>Local:</label>
-            <select id="local">
-                <option value="">-- Escolher --</option>
-                <option>Hospital Torres Novas</option>
-                <option>Centro de Saúde Carregueiros</option>
-                <option>Centro de Saúde Entroncamento</option>
-            </select>
-
-            <label>Número / Nome da Sala:</label>
-            <input id="sala" type="text" placeholder="Ex: Sala 12C">
-
-            <label>Nome do Utilizador (opcional):</label>
-            <input id="utilizador" type="text" placeholder="Ex: ricardo.esantos">
-
-            <label>Sala Partilhada?</label>
-            <select id="partilhada">
-                <option value="não">Não</option>
-                <option value="sim">Sim (uso comum)</option>
-            </select>
-
-            <button onclick="confirmarSala()">Confirmar Sala</button>
+      <!-- LOGIN -->
+      <div id="login-section">
+        <div id="g_id_onload"
+            data-client_id="SEU_CLIENT_ID_AQUI"
+            data-login_uri=""
+            data-callback="handleCredentialResponse">
         </div>
 
-        <!-- EQUIPAMENTOS -->
-        <div id="equipSection" style="display:none">
-            <h2>📸 Adicionar Equipamentos</h2>
-
-            <div class="card">
-                <label>Tipo de Equipamento:</label>
-                <select id="tipo">
-                    <option value="">-- Escolher --</option>
-                    <option>PC</option>
-                    <option>Monitor</option>
-                    <option>Telefone</option>
-                    <option>Impressora</option>
-                    <option>Sensor Biométrico</option>
-                    <option value="outro">Outro…</option>
-                </select>
-
-                <input id="tipoOutro" style="display:none" type="text" placeholder="Especificar tipo">
-
-                <label>Foto do Equipamento:</label>
-                <input type="file" id="foto" accept="image/*" />
-
-                <button onclick="processarFoto()">Enviar Foto</button>
-            </div>
-
-            <button class="danger" onclick="novaSala()">➕ Nova Sala</button>
-
-            <div id="result"></div>
+        <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="signin_with"
+            data-shape="rectangular"
+            data-logo_alignment="left">
         </div>
+      </div>
 
-    </div>
+      <!-- AREA LOGADA -->
+      <div id="content" style="display:none;">
+        <h2>Bem-vindo <span id="user-name"></span></h2>
+        <button id="logout-btn">Logout</button>
 
-    <script src="app.js"></script>
+        <hr>
+
+        <h3>Enviar fotos do inventário</h3>
+        <input type="file" id="file-input" accept="image/*" multiple>
+        <button id="upload-btn">Enviar</button>
+
+        <p id="status"></p>
+      </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
