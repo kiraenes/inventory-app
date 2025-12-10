@@ -2,61 +2,81 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inventário App</title>
 
-    <!-- Google Identity Services -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Google OAuth -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <header>
-        <h1>Inventário App</h1>
-    </header>
 
-    <main id="content">
+    <!-- LOGIN SECTION -->
+    <div id="loginSection" class="centered">
+        <h2>Inventário App</h2>
+        <button id="loginBtn" onclick="googleLogin()">Login com Google</button>
+    </div>
 
-        <!-- Login Section -->
-        <section id="login-section">
-            <h2>Login Google</h2>
-            <button id="login-btn">Iniciar Sessão com Google</button>
-        </section>
+    <!-- APP SECTION -->
+    <div id="appSection" style="display:none">
 
-        <!-- App Interface -->
-        <section id="app-section" class="hidden">
+        <h2>📍 Nova Sala</h2>
+        <div class="card">
+            <label>Local:</label>
+            <select id="local">
+                <option value="">-- Escolher --</option>
+                <option>Hospital Torres Novas</option>
+                <option>Centro de Saúde Carregueiros</option>
+                <option>Centro de Saúde Entroncamento</option>
+            </select>
 
-            <h2>Nova Sala</h2>
+            <label>Número / Nome da Sala:</label>
+            <input id="sala" type="text" placeholder="Ex: Sala 12C">
 
-            <label>Local / Edifício</label>
-            <input id="local" placeholder="Ex: Centro de Saúde Carregueiros">
+            <label>Nome do Utilizador (opcional):</label>
+            <input id="utilizador" type="text" placeholder="Ex: ricardo.esantos">
 
-            <label>Número/Nome da Sala</label>
-            <input id="sala" placeholder="Ex: Sala 12">
+            <label>Sala Partilhada?</label>
+            <select id="partilhada">
+                <option value="não">Não</option>
+                <option value="sim">Sim (uso comum)</option>
+            </select>
 
-            <label>Nome do utilizador (opcional)</label>
-            <input id="userName" placeholder="Ex: ricardo.esantos">
+            <button onclick="confirmarSala()">Confirmar Sala</button>
+        </div>
 
-            <label>
-                <input type="checkbox" id="commonDesk">
-                Secretaria comum?
-            </label>
+        <!-- EQUIPAMENTOS -->
+        <div id="equipSection" style="display:none">
+            <h2>📸 Adicionar Equipamentos</h2>
 
-            <button id="confirmSala">Confirmar Sala</button>
+            <div class="card">
+                <label>Tipo de Equipamento:</label>
+                <select id="tipo">
+                    <option value="">-- Escolher --</option>
+                    <option>PC</option>
+                    <option>Monitor</option>
+                    <option>Telefone</option>
+                    <option>Impressora</option>
+                    <option>Sensor Biométrico</option>
+                    <option value="outro">Outro…</option>
+                </select>
 
-            <hr>
+                <input id="tipoOutro" style="display:none" type="text" placeholder="Especificar tipo">
 
-            <h2>Enviar Foto</h2>
-            <input type="file" accept="image/*" id="photoInput" capture="environment">
+                <label>Foto do Equipamento:</label>
+                <input type="file" id="foto" accept="image/*" />
 
-            <button id="uploadPhoto">Enviar Foto</button>
+                <button onclick="processarFoto()">Enviar Foto</button>
+            </div>
 
-            <p id="status"></p>
+            <button class="danger" onclick="novaSala()">➕ Nova Sala</button>
 
-        </section>
+            <div id="result"></div>
+        </div>
 
-    </main>
+    </div>
 
     <script src="app.js"></script>
 </body>
