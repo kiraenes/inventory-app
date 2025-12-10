@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário App</title>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Inventário App</h1>
+    </header>
+
+    <main id="content">
+
+        <!-- Login Section -->
+        <section id="login-section">
+            <h2>Login Google</h2>
+            <button id="login-btn">Iniciar Sessão com Google</button>
+        </section>
+
+        <!-- App Interface -->
+        <section id="app-section" class="hidden">
+
+            <h2>Nova Sala</h2>
+
+            <label>Local / Edifício</label>
+            <input id="local" placeholder="Ex: Centro de Saúde Carregueiros">
+
+            <label>Número/Nome da Sala</label>
+            <input id="sala" placeholder="Ex: Sala 12">
+
+            <label>Nome do utilizador (opcional)</label>
+            <input id="userName" placeholder="Ex: ricardo.esantos">
+
+            <label>
+                <input type="checkbox" id="commonDesk">
+                Secretaria comum?
+            </label>
+
+            <button id="confirmSala">Confirmar Sala</button>
+
+            <hr>
+
+            <h2>Enviar Foto</h2>
+            <input type="file" accept="image/*" id="photoInput" capture="environment">
+
+            <button id="uploadPhoto">Enviar Foto</button>
+
+            <p id="status"></p>
+
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
