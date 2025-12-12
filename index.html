@@ -1,50 +1,83 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inventory App</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Google Identity Services -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inventário App</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+  <div class="wrap">
 
-  <div id="app">
-      <h1>Inventory App</h1>
+    <header>
+      <h1>Inventário</h1>
+      <div id="userBadge"></div>
+    </header>
 
-      <!-- LOGIN -->
-      <div id="login-section">
-        <div id="g_id_onload"
-            data-client_id="576401061914-q9pij2kuo6l9ncp2qun7bo6bmpd7ng31.apps.googleusercontent.com"
-            data-login_uri=""
-            data-callback="handleCredentialResponse">
-        </div>
+    <!-- LOGIN -->
+    <section id="loginArea">
+      <p>Inicia sessão para começar.</p>
+      <button id="btnLogin">Login Google</button>
+    </section>
 
-        <div class="g_id_signin"
-            data-type="standard"
-            data-size="large"
-            data-theme="outline"
-            data-text="signin_with"
-            data-shape="rectangular"
-            data-logo_alignment="left">
+    <!-- APP -->
+    <section id="appArea" class="hidden">
+
+      <!-- Local / Adicionar Local -->
+      <div class="card">
+        <label>Local / Unidade (obrigatório)</label>
+        <div class="row">
+          <select id="selectLocal"></select>
+          <input id="newLocalInput" placeholder="Adicionar novo local..." />
+          <button id="btnAddLocal">Adicionar</button>
         </div>
       </div>
 
-      <!-- AREA LOGADA -->
-      <div id="content" style="display:none;">
-        <h2>Bem-vindo <span id="user-name"></span></h2>
-        <button id="logout-btn">Logout</button>
-
-        <hr>
-
-        <h3>Enviar fotos do inventário</h3>
-        <input type="file" id="file-input" accept="image/*" multiple>
-        <button id="upload-btn">Enviar</button>
-
-        <p id="status"></p>
+      <!-- Sala: foto da porta opcional ou input -->
+      <div class="card">
+        <label>Sala / Porta</label>
+        <div class="row">
+          <input id="salaInput" placeholder="Ex: Sala 102" />
+          <input type="file" id="portaFoto" accept="image/*" capture="environment" />
+          <button id="btnScanPorta">Usar foto da porta (OCR)</button>
+        </div>
+        <small class="muted">Podes tirar foto da porta para tentar extrair automaticamente o número da sala.</small>
       </div>
+
+      <!-- Adicionar Dispositivo -->
+      <div class="card">
+        <label>Adicionar dispositivo</label>
+        <div class="row">
+          <select id="tipoDevice">
+            <option value="">-- Escolher tipo --</option>
+            <option>PC</option>
+            <option>Monitor</option>
+            <option>Impressora</option>
+            <option>Telefone</option>
+            <option value="outro">Outro...</option>
+          </select>
+          <input id="tipoOutro" placeholder="Especificar tipo" style="display:none" />
+        </div>
+
+        <label>Fotos do dispositivo (1+)</label>
+        <input type="file" id="devicePhotos" accept="image/*" multiple capture="environment" />
+
+        <div class="row">
+          <button id="btnProcessDevice">Processar fotos do dispositivo</button>
+        </div>
+      </div>
+
+      <!-- Lista de dispositivos processados (editar/confirmação) -->
+      <div id="devicesList"></div>
+
+      <div class="card">
+        <button id="btnSaveAll">Guardar tudo no Drive (inventario_<email>.json)</button>
+        <button id="btnExportCSV">Exportar CSV</button>
+        <p id="status" class="muted"></p>
+      </div>
+    </section>
+
   </div>
 
   <script src="app.js"></script>
