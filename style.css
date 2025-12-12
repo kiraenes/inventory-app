@@ -16,4 +16,4 @@ button:active{transform:translateY(1px)}
 #devicesList .deviceCard{border:1px solid #eee;padding:10px;margin:8px 0;border-radius:8px;background:#fafafa}
 .deviceRow{display:flex;gap:8px;flex-wrap:wrap}
 small{display:block;color:var(--muted)}
-#status{margin-top:8px}
+#status{margin-top:8px} 
