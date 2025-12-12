@@ -1,51 +1,19 @@
-body {
-    margin: 0;
-    padding: 0;
-    background: #f3f3f3;
-    font-family: Arial, sans-serif;
+:root{
+  --bg:#f6f8fb; --card:#fff; --accent:#1e88e5; --muted:#666;
 }
-
-.centered {
-    text-align: center;
-    margin-top: 100px;
-}
-
-h2 {
-    text-align: center;
-}
-
-button {
-    background: #4285f4;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 100%;
-}
-
-button:hover {
-    background: #3367d6;
-}
-
-.danger {
-    background: #d9534f;
-}
-
-.card {
-    background: white;
-    padding: 15px;
-    margin: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px #0002;
-}
-
-input, select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0 16px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial;background:var(--bg);color:#111}
+.wrap{max-width:720px;margin:18px auto;padding:12px}
+header{display:flex;justify-content:space-between;align-items:center}
+h1{margin:0}
+.card{background:var(--card);padding:12px;border-radius:10px;margin:10px 0;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.row{display:flex;gap:8px;align-items:center}
+.row input[type="text"], .row select, input[type="file"], input[type="text"], select {flex:1;padding:10px;border-radius:8px;border:1px solid #ddd}
+button{background:var(--accent);color:white;border:0;padding:10px 12px;border-radius:8px;cursor:pointer}
+button:active{transform:translateY(1px)}
+.hidden{display:none}
+.muted{color:var(--muted);font-size:13px}
+#devicesList .deviceCard{border:1px solid #eee;padding:10px;margin:8px 0;border-radius:8px;background:#fafafa}
+.deviceRow{display:flex;gap:8px;flex-wrap:wrap}
+small{display:block;color:var(--muted)}
+#status{margin-top:8px}
