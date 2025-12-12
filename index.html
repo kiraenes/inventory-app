@@ -5,53 +5,217 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inventory App</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Google Identity Services (SEM async/defer!) -->
-  <script src="https://accounts.google.com/gsi/client"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+  <div id="app" class="container">
+    <h1>Inventory App</h1>
 
-  <div id="app">
-      <h1>Inventory App</h1>
+    <!-- LOGIN -->
+    <div id="login-section">
+      <div id="g_id_onload"
+        data-client_id="SEU_CLIENT_ID_AQUI"
+        data-login_uri="https://kiraenes.github.io/inventory-app/"
+        data-callback="handleCredentialResponse">
+      </div>
 
-      <!-- LOGIN -->
-      <div id="login-section">
-        <div id="g_id_onload"
-            data-client_id="576401061914-q9pij2kuo6l9ncp2qun7bo6bmpd7ng31.apps.googleusercontent.com"
-            data-callback="handleCredentialResponse">
-        </div>
+      <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="signin_with"
+        data-shape="rectangular"
+        data-logo_alignment="left">
+      </div>
+    </div>
 
-        <div class="g_id_signin"
-            data-type="standard"
-            data-size="large"
-            data-theme="outline"
-            data-text="signin_with"
-            data-shape="rectangular"
-            data-logo_alignment="left">
+    <!-- APP -->
+    <div id="content" style="display:none;">
+      <h2>Bem‑vindo <span id="user-name"></span></h2>
+      <button id="logout-btn">Logout</button>
+      <hr>
+
+      <h3>Adicionar equipamento</h3>
+
+      <!-- Tipo de equipamento -->
+      <label>Tipo de equipamento:</label>
+      <select id="device-type">
+        <option value="PC">PC</option>
+        <option value="Monitor">Monitor</option>
+        <option value="Impressora">Impressora</option>
+        <option value="Telefone">Telefone</option>
+        <option value="Outro">Outro</option>
+      </select>
+
+      <!-- Localização -->
+      <label>Localização:</label>
+      <select id="location"></select>
+      <button id="add-location-btn">Adicionar Localização</button>
+
+      <div id="new-location-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <h3>Nova Localização</h3>
+          <input type="text" id="new-location-input" placeholder="Ex: Sala 2.1">
+          <button id="save-location-btn">Guardar</button>
         </div>
       </div>
 
-      <!-- AREA LOGADA -->
-      <div id="content" style="display:none;">
-        <h2>Bem-vindo <span id="user-name"></span></h2>
-        <button id="logout-btn">Logout</button>
+      <!-- Fotos -->
+      <h3>Enviar fotos</h3>
+      <input type="file" id="file-input" accept="image/*" multiple>
+      <button id="upload-btn">Enviar</button>
+      <p id="status"></p>
 
-        <hr>
+      <hr>
 
-        <h3>Local</h3>
-        <select id="selectLocal"></select>
-        <button id="add-local-btn">Adicionar Local</button>
-
-        <hr>
-
-        <h3>Enviar fotos do inventário</h3>
-        <input type="file" id="file-input" accept="image/*" multiple>
-        <button id="upload-btn">Enviar</button>
-
-        <p id="status"></p>
-      </div>
+      <h3>Equipamentos adicionados</h3>
+      <table id="inventory-table">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Localização</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Nº Série</th>
+            <th>Porta</th>
+            <th>Fotos</th>
+          </tr>
+        </thead>
+        <tbody id="inventory-body"></tbody>
+      </table>
+    </div>
   </div>
 
-  <script src="app.js"></script>
+  <script>
+// ====== LOGIN ======
+window.handleCredentialResponse = (response) => {
+  const data = parseJwt(response.credential);
+  localStorage.setItem("user", JSON.stringify(data));
+  document.getElementById("user-name").textContent = data.name;
+  document.getElementById("login-section").style.display = "none";
+  document.getElementById("content").style.display = "block";
+};
+
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+  return JSON.parse(jsonPayload);
+}
+
+document.getElementById("logout-btn").addEventListener("click", () => {
+  localStorage.removeItem("user");
+  document.getElementById("content").style.display = "none";
+  document.getElementById("login-section").style.display = "block";
+});
+
+window.onload = () => {
+  const savedUser = localStorage.getItem("user");
+  if (savedUser) {
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("content").style.display = "block";
+    document.getElementById("user-name").textContent = JSON.parse(savedUser).name;
+  }
+  loadLocations();
+};
+
+// ====== LOCAIS ======
+const locationSelect = document.getElementById("location");
+const modal = document.getElementById("new-location-modal");
+const newLocationInput = document.getElementById("new-location-input");
+
+function loadLocations() {
+  const saved = JSON.parse(localStorage.getItem("locations") || "[]");
+
+  locationSelect.innerHTML = "";
+  saved.forEach(loc => {
+    const opt = document.createElement("option");
+    opt.value = opt.textContent = loc;
+    locationSelect.appendChild(opt);
+  });
+}
+
+document.getElementById("add-location-btn").onclick = () => {
+  modal.style.display = "flex";
+};
+
+document.getElementById("save-location-btn").onclick = () => {
+  const value = newLocationInput.value.trim();
+  if (!value) return;
+
+  const saved = JSON.parse(localStorage.getItem("locations") || "[]");
+  saved.push(value);
+  localStorage.setItem("locations", JSON.stringify(saved));
+
+  loadLocations();
+  modal.style.display = "none";
+  newLocationInput.value = "";
+};
+
+// ====== UPLOAD ======
+const uploadBtn = document.getElementById("upload-btn");
+const fileInput = document.getElementById("file-input");
+
+uploadBtn.onclick = () => {
+  const files = [...fileInput.files];
+  if (!files.length) return alert("Nenhuma foto enviada.");
+
+  const type = document.getElementById("device-type").value;
+  const location = locationSelect.value;
+
+  // Exemplo de processador (futuro OCR será aqui)
+  const item = {
+    type,
+    location,
+    brand: "(extraído futuramente)",
+    model: "(extraído futuramente)",
+    serial: "(extraído futuramente)",
+    port: "(extraído futuramente)",
+    photos: files.map(f => f.name)
+  };
+
+  saveItem(item);
+  renderTable();
+};
+
+function saveItem(item) {
+  const items = JSON.parse(localStorage.getItem("inventory") || "[]");
+  items.push(item);
+  localStorage.setItem("inventory", JSON.stringify(items));
+}
+
+function renderTable() {
+  const items = JSON.parse(localStorage.getItem("inventory") || "[]");
+  const body = document.getElementById("inventory-body");
+
+  body.innerHTML = "";
+
+  items.forEach(i => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${i.type}</td>
+      <td>${i.location}</td>
+      <td>${i.brand}</td>
+      <td>${i.model}</td>
+      <td>${i.serial}</td>
+      <td>${i.port}</td>
+      <td>${i.photos.join('<br>')}</td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+renderTable();
+  </script>
+
+<style>
+body { font-family: Arial; background: #f0f0f0; margin:0; padding:20px; }
+.container { background:white; padding:20px; border-radius:10px; max-width:900px; margin:auto; }
+.modal { position:fixed; top:0; left:0; width:100%; height:100%; background:#0005; justify-content:center; align-items:center; }
+.modal-content { background:white; padding:20px; border-radius:8px; }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+th, td { padding:8px; border:1px solid #ccc; }
+</style>
+
 </body>
 </html>
